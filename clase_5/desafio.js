@@ -3,7 +3,6 @@ import { promises as fs} from 'fs'
 
 class ProductManager {
     constructor(ruta) {
-        this.products = []
         this.path = ruta
         this.i = 1
     }
