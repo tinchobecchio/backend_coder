@@ -1,0 +1,33 @@
+<div class="container">
+    <h1 class="mt-4">Chat comunitario</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+
+            <div class="mt-4 mensajes">
+                <p class="mensaje" id="messageLogs"></p>
+            </div>
+
+            <div class="mt-4">
+                <label for="chatBox" class="form-label">Nuevo mensaje</label>
+                <input class="form-control" type="text" id="chatBox" placeholder="Ingrese su mensaje y presione enter para enviar">
+            </div>
+        </div>
+
+        <div class="col-md-4" >
+            <div class="card mt-4">
+                <div class="card-header">
+                    Últimas conexiones:
+                </div>
+                <ul class="list-group list-group-flush" id="enLinea">
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"
+        integrity="sha512-AI5A3zIoeRSEEX9z3Vyir8NqSMC1pY7r5h2cE+9J6FLsoEmSSGLFaqMQw8SWvoONXogkfFrkQiJfLeHLz3+HOg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/main.js"></script>
