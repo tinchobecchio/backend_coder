@@ -47,40 +47,30 @@ export const changeRole = async(req,res,next)=>{
 
 export const uploadFiles = async(req,res,next)=>{
     try {
-        if(!req.files){
-            return res.status(400).send({status:"error", error:"Error trying to upload files"})
-        }
-
         const {uid} = req.params
         const user = await findById(uid)
+        const options = Object.keys(req.files) // tipos de archivos a subir
+        
+        // error si no hay archivos para subir
+        if(!options[0]){
+            return res.status(400).send({status:"error", error:"Error trying to upload files", message: "Please select files to upload"})
+        }
 
+        // error si el id de usuario es invalido
         if(!user._id){
             return res.status(400).send({status:"error", error:"Not a valid user"})
         }
 
-        // CARGAR IMAGENES DE PRODUCTOS (al ser imagenes de productos puede subir varias a la vez)
-        if(req.files.products !== undefined){
-            let productsPics = req.files.products.map((doc) => ({
-                name: doc.filename,
-                reference: doc.path.split("public")[1]
-            }))
-            user.documents = [...user.documents, ...productsPics]
-            await user.save()
-        }
-
-        // Para el resto que son unicos (una sola imagen de perfil, un solo dni, etc)
-        const OPTIONS = [req.files.profiles, req.files["documents-id"], req.files["documents-address"], req.files["documents-account"]]
+        let newDocs = []
         
-        OPTIONS.forEach(async(file) => {
-            if(file !== undefined){
-                let newFile = {
-                    name: file[0].filename,
-                    reference: file[0].path.split("public")[1]
-                }
-                await uploadDoc(uid,newFile)
-            }
+        // recorrer los arrays de cada opcion y pushear cada file en newDocs
+        options.forEach(opt => {
+            req.files[opt].forEach(file => newDocs.push(file))
         })
-    
+
+        // pasarle cada file al servicio que se encarga de subir los archivos
+        newDocs.forEach(async(file) => await uploadDoc(uid,file))
+
         res.send({status:"success", message: "Files uploaded successfully"})
 
     } catch (error) {

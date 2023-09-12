@@ -79,23 +79,16 @@ export const lastConnectionUpdate = async(email) => {
 
 export const uploadDoc = async(uid, document) => {
     try {
-
-        const user = await usersManager.findById(uid)
-        let userDocs = user.documents
-        const doc = userDocs.find(doc => doc.name.split('.')[0] === document.name.split('.')[0])
-
-        // si ya existe lo quita
-        if(doc){
-            let filteredUserDocs = userDocs.filter(dbDoc => dbDoc.name.split('.')[0] !== document.name.split('.')[0])
-            userDocs = filteredUserDocs
+        // darle formato al archivo
+        let newFile = {
+            name: document.filename,
+            reference: document.path.split("public")[1]
         }
-        
-        userDocs.push(document) // agrega el nuevo
 
-        // guardo los cambios en el usuario
-        user.documents = userDocs
-        await user.save()
-        return
+        // llamar al metodo para subir el archivo
+        const response = await usersManager.uploadFile(uid,newFile)
+        return response
+        
     } catch (error) {
         return error
     }
